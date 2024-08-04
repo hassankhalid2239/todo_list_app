@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:todo_list_app/View/splash_screen.dart';
 import 'package:todo_list_app/db/db_helper.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DbHelper.initDB();
   runApp(const MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'To-do List',
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xffd9daf3),
+        scaffoldBackgroundColor: const Color(0xffd9daf3),
         // scaffoldBackgroundColor: Color(0xffB3B7EE),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -28,5 +28,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

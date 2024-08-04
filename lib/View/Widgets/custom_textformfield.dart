@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomInputField extends StatelessWidget {
@@ -8,17 +7,15 @@ class CustomInputField extends StatelessWidget {
   final int maxLines;
   final int minLines;
 
-
-  CustomInputField({
-    required this.controller,
-    required this.labelText,
-
-    required Color cursorColor,
-    required Color borderColor,
-    this.sufix,
-    this.minLines=1,
-    this.maxLines=1
-  });
+  const CustomInputField(
+      {super.key,
+      required this.controller,
+      required this.labelText,
+      required Color cursorColor,
+      required Color borderColor,
+      this.sufix,
+      this.minLines = 1,
+      this.maxLines = 1});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +34,6 @@ class CustomInputField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: labelText,
-
           suffixIcon: sufix,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),

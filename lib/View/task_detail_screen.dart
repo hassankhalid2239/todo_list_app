@@ -1,16 +1,16 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_list_app/Contoller/task_controller.dart';
-import 'package:todo_list_app/db/db_helper.dart';
 
 import '../Model/task_model.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final TaskModel? task;
-  TaskDetailScreen({
+  const TaskDetailScreen({
     super.key,
     required this.task,
   });
@@ -47,16 +47,16 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xff9395D3),
+        backgroundColor: const Color(0xff9395D3),
         foregroundColor: Colors.white,
         actions: [
           widget.task!.isCompleted == 'false'
-              ? Icon(
+              ? const Icon(
                   Icons.access_time_outlined,
                   color: Colors.white,
                 )
-              : SizedBox(),
-          SizedBox(
+              : const SizedBox(),
+          const SizedBox(
             width: 5,
           ),
           Padding(
@@ -67,7 +67,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 _taskController.getTasks();
                 Get.back();
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.delete_outline,
                 color: Colors.white,
               ),
@@ -77,16 +77,26 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       ),
       body: PopScope(
         onPopInvoked: (didPop) {
+          TaskModel updatedTask = TaskModel(
+            id: widget.task!.id,
+            title: titleTextController.text,
+            description: descriptionTextController.text,
+            isCompleted: widget.task!.isCompleted,
+            date: widget.task!.date,
+            dueDate: dueDateTextController.text.replaceFirst('Due date: ', ''),
+          );
+          _taskController.updateTask(updatedTask);
           Get.snackbar(
             'InBuild',
             'Update Function is not build !',
             backgroundColor: Colors.white,
             snackPosition: SnackPosition.BOTTOM,
-            icon: Icon(Icons.warning_amber_rounded,
-              color: Colors.red,),
+            icon: const Icon(
+              Icons.warning_amber_rounded,
+              color: Colors.red,
+            ),
             colorText: Colors.pinkAccent,
           );
-
         },
         child: SingleChildScrollView(
           child: Padding(
@@ -94,12 +104,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 TextFormField(
                   style: GoogleFonts.jost(
-                      color: Color(0xff9395D3),
+                      color: const Color(0xff9395D3),
                       fontSize: 26,
                       fontWeight: FontWeight.w500),
                   maxLines: 5,
@@ -112,23 +122,24 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     }
                   },
                   controller: titleTextController,
-                  cursorColor: Color(0xff9395D3),
+                  cursorColor: const Color(0xff9395D3),
                   decoration: InputDecoration(
-                    label: Text('Title'),
+                    label: const Text('Title'),
                     labelStyle: GoogleFonts.jost(
-                        color: Color(0xff9395D3),
+                        color: const Color(0xff9395D3),
                         fontSize: 26,
                         fontWeight: FontWeight.w500),
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
                   ),
                 ),
-                Divider(),
-                SizedBox(
+                const Divider(),
+                const SizedBox(
                   height: 10,
                 ),
                 TextFormField(
                   style: GoogleFonts.jost(
-                      color: Color(0xff9395D3),
+                      color: const Color(0xff9395D3),
                       fontSize: 16,
                       height: 1.5,
                       wordSpacing: 1.5,
@@ -143,17 +154,18 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     }
                   },
                   controller: descriptionTextController,
-                  cursorColor: Color(0xff9395D3),
+                  cursorColor: const Color(0xff9395D3),
                   decoration: InputDecoration(
-                    label: Text('Description'),
+                    label: const Text('Description'),
                     labelStyle: GoogleFonts.jost(
-                        color: Color(0xff9395D3),
+                        color: const Color(0xff9395D3),
                         fontSize: 25,
                         fontWeight: FontWeight.w500),
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
                   ),
                 ),
-                Divider(),
+                const Divider(),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
@@ -162,36 +174,33 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     style: GoogleFonts.jost(
                       color: widget.task!.isCompleted == 'false'
                           ? Colors.red
-                          : Color(0xff9395D3),
+                          : const Color(0xff9395D3),
                     ),
                     controller: dueDateTextController,
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           builder: (context, child) => Theme(
-                            data: ThemeData().copyWith(
-                                colorScheme:
-                                ColorScheme.light(
-                                    background:
-                                    Theme.of(context)
-                                        .colorScheme
-                                        .background)),
-                            child: child!,
-                          ),
+                                data: ThemeData().copyWith(
+                                    colorScheme: ColorScheme.light(
+                                        background: Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                                child: child!,
+                              ),
                           context: context,
                           firstDate: DateTime(1900),
                           lastDate: DateTime(2100));
                       if (pickedDate != null) {
                         dueDateTextController.text =
                             'Due date: ${DateFormat('EEE, d MMMM, yyyy').format(pickedDate)}';
-                      }else{
-                        dueDateTextController.text=
+                      } else {
+                        dueDateTextController.text =
                             'Due date: ${DateFormat('EEE, d MMMM, yyyy').format(DateTime.now())}';
                       }
                     },
-                    cursorColor: Color(0xff9395D3),
-                    decoration: InputDecoration(
+                    cursorColor: const Color(0xff9395D3),
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(borderSide: BorderSide.none),
-
                     ),
                   ),
                 ),
@@ -209,7 +218,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           child: Text(
             'Created at ${widget.task!.date}',
             // 'Created at $date',
-            style: GoogleFonts.jost(color: Color(0xff9395D3), fontSize: 14),
+            style:
+                GoogleFonts.jost(color: const Color(0xff9395D3), fontSize: 14),
           ),
         ),
         // color: Colors.transparent,
@@ -217,131 +227,3 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     );
   }
 }
-
-//
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:todo_list_app/Contoller/task_controller.dart';
-// import 'package:todo_list_app/View/edit_task_screen.dart';
-//
-// import '../Model/task_model.dart';
-//
-// class TaskDetailScreen extends StatelessWidget {
-//   final TaskModel? task;
-//   TaskDetailScreen({super.key,
-//     required this.task,
-//
-// });
-//
-//   final _taskController = Get.put(TaskController());
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       appBar: AppBar(
-//         backgroundColor: Color(0xff9395D3),
-//         foregroundColor: Colors.white,
-//         actions: [
-//           task!.isCompleted=='false'?
-//           Icon(Icons.access_time_outlined,color: Colors.white,):SizedBox(),
-//           SizedBox(width: 5,),
-//           IconButton(
-//             onPressed: (){
-//               Navigator.push(context, MaterialPageRoute(builder: (context)=>EditTaskScreen(
-//                 task: task,
-//               )));
-//             },
-//             icon: Icon(Icons.edit_outlined,color: Colors.white,),
-//           ),
-//           Padding(
-//             padding: const EdgeInsets.only(right: 5),
-//             child: IconButton(
-//               onPressed: (){
-//                 _taskController.delete(task!);
-//                 _taskController.getTasks();
-//                 Get.back();
-//               },
-//               icon: Icon(Icons.delete_outline,color: Colors.white,),
-//             ),
-//           )
-//         ],
-//       ),
-//       body: SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 20),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               SizedBox(height: 10,),
-//               Text(
-//                 task!.title.toString(),
-//                 // title,
-//                 // 'Design Logo',
-//
-//                 style: GoogleFonts.jost(
-//                   color: Color(0xff9395D3),
-//                   fontSize: 26,
-//                   fontWeight: FontWeight.w500
-//               ),),
-//               SizedBox(height: 20,),
-//               Text(
-//                 task!.description.toString(),
-//                 // description,
-//                 // 'This is description of task This is description of task This is description of task This is description of task This is description of task',
-//                 style: GoogleFonts.jost(
-//                   color: Color(0xff9395D3),
-//                   fontSize: 16,
-//                   height: 1.5,
-//                   wordSpacing: 1.5,
-//                   letterSpacing: 0.5
-//                 ),),
-//               SizedBox(height: 20,),
-//               Align(
-//                 alignment: Alignment.bottomRight,
-//                 child: Text.rich(
-//                   TextSpan(text: 'Due date: ',
-//                     style: GoogleFonts.jost(
-//                         color: Color(0xff9395D3),
-//                         fontSize: 14
-//                     ),
-//                   children: [
-//                     TextSpan(text: '${task!.dueDate}',
-//                     style: GoogleFonts.jost(
-//                       color: task!.isCompleted=='false'?
-//                       Colors.red : Color(0xff9395D3),
-//                     // color: Color(0xff9395D3),
-//                     fontSize: 14
-//                 ),)
-//                   ])
-//                   // 'Due date: $dueDate',
-//                   ),
-//               ),
-//
-//             ],
-//           ),
-//         ),
-//       ),
-//       bottomNavigationBar: BottomAppBar(
-//         height: 40,
-//         padding: EdgeInsets.zero,
-//         color: Colors.transparent,
-//         // color: Colors.yellowAccent,
-//         child: Center(
-//           child: Text(
-//
-//             'Created at ${task!.date}',
-//             // 'Created at $date',
-//             style: GoogleFonts.jost(
-//                 color: Color(0xff9395D3),
-//                 fontSize: 14
-//             ),),
-//         ),
-//         // color: Colors.transparent,
-//       ),
-//     );
-//   }
-// }
