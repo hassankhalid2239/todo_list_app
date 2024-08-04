@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:todo_list_app/Model/task_model.dart';
 import '../db/db_helper.dart';
 
@@ -6,10 +7,12 @@ class TaskController extends GetxController {
   @override
   void onReady() {
     getTasks();
+    getCompletedTask();
     super.onReady();
   }
 
   var taskList = <TaskModel>[].obs;
+  var completedTask;
 
   //Insert Data into Database
   Future<int> addTask({TaskModel? task}) async {
@@ -22,12 +25,16 @@ class TaskController extends GetxController {
     List<Map<String, dynamic>> tasks = await DbHelper.query();
     taskList
         .assignAll(tasks.map((data) => TaskModel.fromJson(data)).toList());
+    getCompletedTask();
   }
 
   void delete(TaskModel task) {
     DbHelper.delete(task);
   }
-
+  Future<int> getCompletedTask()async{
+    completedTask= await DbHelper.getCompletedTaskCount();
+    return completedTask;
+  }
   void markTaskCompleted(int id, String isCompleted) async {
     await DbHelper.update(id, isCompleted);
   }

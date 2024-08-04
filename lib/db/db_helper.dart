@@ -37,6 +37,25 @@ class DbHelper {
     return await _db!.query(_tableName);
   }
 
+  // static Future<List<Map<String, dynamic>>> queryAll() async {
+  //   // print('query function called');
+  //   return await _db!.rawQuery(
+  //     '''
+  //     SELECT COUNT(*)
+  //     FROM tasks
+  //     WHERE isCompleted = 'true'
+  //     '''
+  //   );
+  // }
+  // Function to get the count of completed tasks
+  static Future<int> getCompletedTaskCount() async {
+    final List<Map<String, dynamic>> result = await _db!.rawQuery(
+        'SELECT COUNT(*) as count FROM $_tableName WHERE isCompleted = ?',
+        ['true']
+    );
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
   static delete(TaskModel task) async {
     await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
   }

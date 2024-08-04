@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -76,12 +77,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color(0xff9395D3),
-          foregroundColor: Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Theme.of(context).colorScheme.surface,
+            statusBarIconBrightness: Theme.of(context).brightness,),
+          elevation: 0,
+          forceMaterialTransparency: true,
+          foregroundColor: Theme.of(context).colorScheme.scrim,
           title: Text(
             'Add Task',
-            style: GoogleFonts.jost(
-                color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         body: SingleChildScrollView(
@@ -94,6 +98,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
                     controller: dueDateTextController,
+                    style: GoogleFonts.montserrat(
+                      color: Theme.of(context).colorScheme.scrim
+                    ),
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           builder: (context, child) => Theme(
@@ -117,12 +124,23 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       }
                     },
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surfaceBright,
                       labelText: 'Date',
-                      suffixIcon: const Icon(
-                        Icons.date_range,
-                        color: Color(0xff9395D3),
+                      labelStyle: GoogleFonts.jost(
+                        color:  Theme.of(context).colorScheme.scrim
                       ),
+                      suffixIcon: Icon(
+                        Icons.date_range,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.scrim)
+                      ),
+
                       border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.surfaceBright),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
@@ -133,9 +151,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 CustomInputField(
                     controller: titleTextController,
-                    labelText: 'Title',
-                    cursorColor: const Color(0xff9395D3),
-                    borderColor: const Color(0xff9395D3)),
+                    labelText: 'Title',),
                 const SizedBox(
                   height: 10,
                 ),
@@ -143,9 +159,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     minLines: 1,
                     maxLines: 15,
                     controller: descriptionTextController,
-                    labelText: 'Detail',
-                    cursorColor: const Color(0xff9395D3),
-                    borderColor: const Color(0xff9395D3)),
+                    labelText: 'Detail',),
                 const SizedBox(
                   height: 10,
                 ),
@@ -160,7 +174,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15))),
                         backgroundColor:
-                            const WidgetStatePropertyAll(Color(0xff9395D3))),
+                             WidgetStatePropertyAll(Theme.of(context).primaryColor)),
                     onPressed: () {
                       submitData();
                     },

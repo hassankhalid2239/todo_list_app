@@ -24,17 +24,16 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.white,
-            statusBarIconBrightness: Brightness.dark,
-            systemNavigationBarIconBrightness: Brightness.dark),
+        systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Theme.of(context).colorScheme.surface,
+            statusBarIconBrightness: Theme.of(context).brightness,),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: const Center(
         child: Image(
-          image: AssetImage('assets/images/applogo.png'),
+          image: AssetImage('assets/images/splashimage.png'),
         ),
       ),
     );

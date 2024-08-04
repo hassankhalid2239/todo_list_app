@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo_list_app/View/home_screen.dart';
 import 'package:todo_list_app/View/splash_screen.dart';
 import 'package:todo_list_app/db/db_helper.dart';
+
+import 'Contoller/theme_controller.dart';
+import 'Utils/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DbHelper.initDB();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  final _themeController = Get.put(ThemeController());
 
   // This widget is the root of your application.
   @override
@@ -18,13 +23,10 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'To-do List',
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xffd9daf3),
-        // scaffoldBackgroundColor: Color(0xffB3B7EE),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const SplashScreen(),
+      theme: lightThemeData(context),
+      darkTheme: darkThemeData(context),
+      themeMode: _themeController.theme==true? ThemeMode.dark: ThemeMode.light,
+      home:  SplashScreen(),
     );
   }
 }

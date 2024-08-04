@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -11,8 +12,6 @@ class CustomInputField extends StatelessWidget {
       {super.key,
       required this.controller,
       required this.labelText,
-      required Color cursorColor,
-      required Color borderColor,
       this.sufix,
       this.minLines = 1,
       this.maxLines = 1});
@@ -31,12 +30,25 @@ class CustomInputField extends StatelessWidget {
             return null;
           }
         },
+        style: GoogleFonts.montserrat(
+            color: Theme.of(context).colorScheme.scrim
+        ),
         controller: controller,
+        cursorColor: Theme.of(context).colorScheme.scrim,
         decoration: InputDecoration(
+          filled: true,
+          fillColor: Theme.of(context).colorScheme.surfaceBright,
+          labelStyle: GoogleFonts.jost(
+              color:  Theme.of(context).colorScheme.scrim
+          ),
           labelText: labelText,
           suffixIcon: sufix,
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(color: Theme.of(context).colorScheme.scrim)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.surfaceBright)
           ),
         ),
       ),
