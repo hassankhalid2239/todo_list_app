@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:todo_list_app/Contoller/state_controller.dart';
 import 'package:todo_list_app/Contoller/theme_controller.dart';
+import 'package:todo_list_app/View/Widgets/circular_progress_bar.dart';
 import 'package:todo_list_app/View/task_detail_screen.dart';
 import '../Contoller/task_controller.dart';
 import 'add_task_screen.dart';
@@ -12,6 +14,8 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final _taskController = Get.put(TaskController());
+  // final _themeController = Get.put(ThemeController());
+  final _stateController = Get.put(StateController());
   final _themeController = Get.put(ThemeController());
 
   @override
@@ -20,52 +24,147 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Theme.of(context).colorScheme.surface,
-          statusBarIconBrightness: Theme.of(context).brightness,),
+          statusBarIconBrightness: Theme.of(context).brightness,
+        ),
         elevation: 0,
         forceMaterialTransparency: true,
         // backgroundColor: Color(0xffd9daf3),
         title: Padding(
           padding: const EdgeInsets.only(left: 5),
           child: SvgPicture.asset(
-              'assets/svg/todolist.svg',
-            colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onPrimary, BlendMode.srcIn),
+            'assets/svg/todolist.svg',
+            colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.onPrimary, BlendMode.srcIn),
           ),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: (){
+              onPressed: () {
                 _themeController.changeTheme(context);
               },
-              icon: Icon(_themeController.theme==true?
-                Icons.light_mode: Icons.dark_mode,
-                color: Theme.of(context).colorScheme.onTertiary,),
+              icon: Icon(
+                _themeController.theme == true
+                    ? Icons.light_mode
+                    : Icons.dark_mode,
+                color: Theme.of(context).colorScheme.onTertiary,
+              ),
             ),
           )
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10,),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: SvgPicture.asset(
-                  'assets/svg/logo.svg',
-                  colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onPrimary, BlendMode.srcIn),
-                ),
-                title: Obx((){
-                  return Text('${_taskController.completedTask} of ${_taskController.taskList.length} task',style: GoogleFonts.bebasNeue(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    // color: Color(0xff9395D3),
-                  ),);
+                leading: SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: Obx(() {
+                      return MyCircularProgressBar(
+                        totalTasks: _taskController.taskList.length.toDouble(),
+                        completedTasks: _taskController.ct.toDouble(),
+                      );
+                    })),
+                // leading: SvgPicture.asset(
+                //   'assets/svg/logo.svg',
+                //   colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onPrimary, BlendMode.srcIn),
+                // ),
+                title: Obx(() {
+                  return Text(
+                    '${_taskController.completedTask == 0 ? 0 : _taskController.completedTask} of ${_taskController.taskList.length} task',
+                    style: GoogleFonts.bebasNeue(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      // color: Color(0xff9395D3),
+                    ),
+                  );
                 }),
-                trailing: IconButton(
-                  onPressed: (){},
-                  icon: Icon(Icons.filter_alt_outlined,color: Theme.of(context).colorScheme.onPrimary,),
+                trailing: PopupMenuButton(
+                  tooltip: 'filter',
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  position: PopupMenuPosition.under,
+                  color: Theme.of(context).colorScheme.surfaceBright,
+                  icon: Icon(
+                    Icons.filter_alt_outlined,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 1,
+                      // onTap: (){
+                      //   _taskController.getTasks();
+                      // },
+                      child: Obx(() {
+                        return Text(
+                          'All',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color: _stateController.selectedValue.value == 1
+                                    ? Theme.of(context).primaryColor
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.color,
+                              ),
+                        );
+                      }),
+                    ),
+                    PopupMenuItem(
+                      value: 2,
+                      // onTap: (){
+                      //   _taskController.getTasks();
+                      // },
+                      child: Obx(() {
+                        return Text(
+                          'By Time',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color: _stateController.selectedValue.value == 2
+                                    ? Theme.of(context).primaryColor
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.color,
+                              ),
+                        );
+                      }),
+                    ),
+                    PopupMenuItem(
+                      value: 3,
+                      child: Obx(() {
+                        return Text(
+                          'Deadline',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color: _stateController.selectedValue.value == 3
+                                    ? Theme.of(context).primaryColor
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.color,
+                              ),
+                        );
+                      }),
+                    ),
+                  ],
+                  onSelected: (value) {
+                    _stateController.updateSelectedValue(value);
+                    _taskController.getTasks();
+                  },
                 ),
               ),
             ),
@@ -81,9 +180,16 @@ class HomeScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),
                         // color: Theme.of(context).colorScheme.onSecondary,
-                        color: _taskController.taskList[index].isCompleted=='true'?
-                        Color(0xffF79E89): Color(0xffF76C6A),
+                        color: _taskController.taskList[index].isCompleted ==
+                                'true'
+                            ? Color(0xffF79E89)
+                            : Color(0xffF76C6A),
                         child: InkWell(
+                          borderRadius: BorderRadius.circular(15),
+                          splashFactory: InkRipple.splashFactory,
+                          splashColor: Colors.redAccent,
+                          overlayColor:
+                              const WidgetStatePropertyAll(Colors.redAccent),
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -96,7 +202,8 @@ class HomeScreen extends StatelessWidget {
                               title: Text(
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                _taskController.taskList[index].title.toString(),
+                                _taskController.taskList[index].title
+                                    .toString(),
                                 // 'Task $index',
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
@@ -125,12 +232,14 @@ class HomeScreen extends StatelessWidget {
                                 ],
                               ),
                               trailing: Obx(() {
-                                if (_taskController.taskList[index].isCompleted ==
+                                if (_taskController
+                                        .taskList[index].isCompleted ==
                                     'true') {
                                   return GestureDetector(
                                       onTap: () {
                                         _taskController.markTaskCompleted(
-                                            int.parse(_taskController.taskList[index].id
+                                            int.parse(_taskController
+                                                .taskList[index].id
                                                 .toString()),
                                             false.toString());
                                         _taskController.getTasks();
@@ -138,12 +247,14 @@ class HomeScreen extends StatelessWidget {
                                       child: const Icon(
                                         Icons.check_circle,
                                         color: Colors.white,
+                                        size: 30,
                                       ));
                                 } else {
                                   return GestureDetector(
                                       onTap: () {
                                         _taskController.markTaskCompleted(
-                                            int.parse(_taskController.taskList[index].id
+                                            int.parse(_taskController
+                                                .taskList[index].id
                                                 .toString()),
                                             true.toString());
                                         _taskController.getTasks();
@@ -151,6 +262,7 @@ class HomeScreen extends StatelessWidget {
                                       child: const Icon(
                                         Icons.check_circle_outline,
                                         color: Colors.white,
+                                        size: 30,
                                       ));
                                 }
                               })
@@ -176,8 +288,8 @@ class HomeScreen extends StatelessWidget {
           shape: const CircleBorder(),
           // backgroundColor: Theme.of(context).colorScheme.onSecondary,
           backgroundColor: const Color(0xffF76C6A),
-          child:  Icon(
-            Icons.add_task_outlined,
+          child: Icon(
+            Icons.add,
             size: 30,
             color: Colors.white,
           ),

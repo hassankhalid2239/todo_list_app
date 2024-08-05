@@ -1,5 +1,8 @@
+import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:todo_list_app/Model/task_model.dart';
+
+import '../Contoller/state_controller.dart';
 
 class DbHelper {
   static Database? _db;
@@ -10,49 +13,40 @@ class DbHelper {
     if (_db != null) {
       return;
     }
-    try {
-      String path = await getDatabasesPath() + 'tasks.db';
-      _db =
-          await openDatabase(path, version: _version, onCreate: (db, version) {
-        // print('Creating a new one');
-        return db.execute(
-          "CREATE TABLE $_tableName("
-          "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-          "title TEXT, description TEXT, date TEXT,"
-          "dueDate TEXT, isCompleted TEXT)",
-        );
-      });
-    } catch (e) {
-      // print(e);
-    }
+    String path = await getDatabasesPath() + 'tasks.db';
+    _db = await openDatabase(path, version: _version, onCreate: (db, version) {
+      return db.execute(
+        "CREATE TABLE $_tableName("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "title TEXT, description TEXT, date TEXT,"
+        "dueDate TEXT, isCompleted TEXT)",
+      );
+    });
   }
 
   static Future<int> insert(TaskModel? task) async {
-    // print('insert function called');
     return await _db?.insert(_tableName, task!.toJson()) ?? 1;
   }
 
   static Future<List<Map<String, dynamic>>> query() async {
-    // print('query function called');
-    return await _db!.query(_tableName);
+    final _stateController = Get.put(StateController());
+    if (_stateController.selectedValue == 1) {
+      return await _db!.query(_tableName);
+    } else if (_stateController.selectedValue == 2) {
+      return await _db!.query(_tableName, orderBy: 'date DESC');
+    } else {
+      return await _db!.query(_tableName, orderBy: 'dueDate DESC');
+    }
   }
 
-  // static Future<List<Map<String, dynamic>>> queryAll() async {
-  //   // print('query function called');
-  //   return await _db!.rawQuery(
-  //     '''
-  //     SELECT COUNT(*)
-  //     FROM tasks
-  //     WHERE isCompleted = 'true'
-  //     '''
-  //   );
-  // }
-  // Function to get the count of completed tasks
+  static Future<List<Map<String, dynamic>>> queryByTime() async {
+    return await _db!.query(_tableName, orderBy: 'date');
+  }
+
   static Future<int> getCompletedTaskCount() async {
     final List<Map<String, dynamic>> result = await _db!.rawQuery(
         'SELECT COUNT(*) as count FROM $_tableName WHERE isCompleted = ?',
-        ['true']
-    );
+        ['true']);
     return Sqflite.firstIntValue(result) ?? 0;
   }
 

@@ -22,16 +22,11 @@ class TaskDetailScreen extends StatefulWidget {
 
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
   final _taskController = Get.put(TaskController());
-
   final titleTextController = TextEditingController();
-
   final descriptionTextController = TextEditingController();
-
   final date = DateFormat('EEE, d MMMM, yyyy, h:mma').format(DateTime.now());
-
   final dueDateTextController = TextEditingController(
       text: DateFormat('EEE, d MMMM, yyyy').format(DateTime.now()));
-
   final bool isCompleted = false;
 
   @override
@@ -49,7 +44,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Theme.of(context).colorScheme.surface,
-          statusBarIconBrightness: Theme.of(context).brightness,),
+          statusBarIconBrightness: Theme.of(context).brightness,
+        ),
         elevation: 0,
         forceMaterialTransparency: true,
         foregroundColor: Theme.of(context).colorScheme.scrim,
@@ -57,9 +53,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         actions: [
           widget.task!.isCompleted == 'false'
               ? const Icon(
-            Icons.access_time_outlined,
-
-          )
+                  Icons.access_time_outlined,
+                )
               : const SizedBox(),
           const SizedBox(
             width: 5,
@@ -68,9 +63,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             padding: const EdgeInsets.only(right: 5),
             child: IconButton(
               onPressed: () {
-                _taskController.delete(widget.task!);
-                _taskController.getTasks();
-                Get.back();
+                bottomSheet(context);
               },
               icon: const Icon(
                 Icons.delete_outline,
@@ -95,7 +88,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           child: Container(
             color: Theme.of(context).colorScheme.surfaceBright,
             child: Padding(
-              padding: const EdgeInsets.only(left: 5, right: 5,top: 10),
+              padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -122,7 +115,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           const OutlineInputBorder(borderSide: BorderSide.none),
                     ),
                   ),
-                  Divider(color: Theme.of(context).scaffoldBackgroundColor,),
+                  Divider(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -179,7 +174,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                               'Due date: ${DateFormat('EEE, d MMMM, yyyy').format(DateTime.now())}';
                         }
                       },
-                      cursorColor:Theme.of(context).colorScheme.scrim,
+                      cursorColor: Theme.of(context).colorScheme.scrim,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(borderSide: BorderSide.none),
                       ),
@@ -200,12 +195,78 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           child: Text(
             'Created at ${widget.task!.date}',
             // 'Created at $date',
-            style:
-                GoogleFonts.jost(color: Theme.of(context).colorScheme.scrim, fontSize: 14),
+            style: GoogleFonts.jost(
+                color: Theme.of(context).colorScheme.scrim, fontSize: 14),
           ),
         ),
         // color: Colors.transparent,
       ),
+    );
+  }
+
+  void bottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 150,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _taskController.delete(widget.task!);
+                        _taskController.getTasks();
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        // Get.back();
+                      },
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                              Theme.of(context).colorScheme.surfaceBright),
+                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)))),
+                      child: Text(
+                        'Delete TODO',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                              Theme.of(context).colorScheme.surfaceBright),
+                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)))),
+                      child: Text('Cancel',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 14,
+                              letterSpacing: 5,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.greenAccent)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

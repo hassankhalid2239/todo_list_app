@@ -30,26 +30,25 @@ class CustomInputField extends StatelessWidget {
             return null;
           }
         },
-        style: GoogleFonts.montserrat(
-            color: Theme.of(context).colorScheme.scrim
-        ),
+        style:
+            GoogleFonts.montserrat(color: Theme.of(context).colorScheme.scrim),
         controller: controller,
         cursorColor: Theme.of(context).colorScheme.scrim,
         decoration: InputDecoration(
           filled: true,
           fillColor: Theme.of(context).colorScheme.surfaceBright,
-          labelStyle: GoogleFonts.jost(
-              color:  Theme.of(context).colorScheme.scrim
-          ),
+          labelStyle:
+              GoogleFonts.jost(color: Theme.of(context).colorScheme.scrim),
           labelText: labelText,
           suffixIcon: sufix,
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide(color: Theme.of(context).colorScheme.scrim)),
+              borderSide:
+                  BorderSide(color: Theme.of(context).colorScheme.scrim)),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.surfaceBright)
-          ),
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.surfaceBright)),
         ),
       ),
     );

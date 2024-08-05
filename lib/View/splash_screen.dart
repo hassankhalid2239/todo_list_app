@@ -25,8 +25,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Theme.of(context).colorScheme.surface,
-            statusBarIconBrightness: Theme.of(context).brightness,),
+          statusBarColor: Theme.of(context).colorScheme.surface,
+          statusBarIconBrightness: Theme.of(context).brightness,
+        ),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),

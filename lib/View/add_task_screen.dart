@@ -18,16 +18,11 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   final _taskController = Get.put(TaskController());
-
   final titleTextController = TextEditingController();
-
   final descriptionTextController = TextEditingController();
-
   final date = DateFormat('EEE, d MMMM, yyyy, h:mma').format(DateTime.now());
-
   final dueDateTextController = TextEditingController(
       text: DateFormat('EEE, d MMMM, yyyy').format(DateTime.now()));
-
   final bool isCompleted = false;
 
   @override
@@ -37,6 +32,127 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     titleTextController.dispose();
     descriptionTextController.dispose();
     dueDateTextController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Theme.of(context).colorScheme.surface,
+            statusBarIconBrightness: Theme.of(context).brightness,
+          ),
+          elevation: 0,
+          forceMaterialTransparency: true,
+          foregroundColor: Theme.of(context).colorScheme.scrim,
+          title: Text(
+            'Add Task',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextField(
+                    controller: dueDateTextController,
+                    style: GoogleFonts.montserrat(
+                        color: Theme.of(context).colorScheme.scrim),
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          builder: (context, child) => Theme(
+                                data: ThemeData().copyWith(
+                                    colorScheme: ColorScheme.light(
+                                        background: Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                                child: child!,
+                              ),
+                          context: context,
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime(2100));
+                      if (pickedDate != null) {
+                        dueDateTextController.text =
+                            DateFormat('EEE, d MMMM, yyyy').format(pickedDate);
+                      } else {
+                        dueDateTextController.text =
+                            DateFormat('EEE, d MMMM, yyyy')
+                                .format(DateTime.now());
+                      }
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surfaceBright,
+                      labelText: 'Date',
+                      labelStyle: GoogleFonts.jost(
+                          color: Theme.of(context).colorScheme.scrim),
+                      suffixIcon: Icon(
+                        Icons.date_range,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.scrim)),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.surfaceBright),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomInputField(
+                  controller: titleTextController,
+                  labelText: 'Title',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomInputField(
+                  minLines: 1,
+                  maxLines: 15,
+                  controller: descriptionTextController,
+                  labelText: 'Detail',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 65,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15))),
+                        backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).primaryColor)),
+                    onPressed: () {
+                      submitData();
+                    },
+                    child: Text(
+                      'Add',
+                      style: GoogleFonts.jost(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 
   void submitData() async {
@@ -71,125 +187,5 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             dueDate: dueDateTextController.text,
             isCompleted: isCompleted.toString()));
     // print("My id is "+"$value");
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Theme.of(context).colorScheme.surface,
-            statusBarIconBrightness: Theme.of(context).brightness,),
-          elevation: 0,
-          forceMaterialTransparency: true,
-          foregroundColor: Theme.of(context).colorScheme.scrim,
-          title: Text(
-            'Add Task',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextField(
-                    controller: dueDateTextController,
-                    style: GoogleFonts.montserrat(
-                      color: Theme.of(context).colorScheme.scrim
-                    ),
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                          builder: (context, child) => Theme(
-                                data: ThemeData().copyWith(
-                                    colorScheme: ColorScheme.light(
-                                        background: Theme.of(context)
-                                            .colorScheme
-                                            .background)),
-                                child: child!,
-                              ),
-                          context: context,
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime(2100));
-                      if (pickedDate != null) {
-                        dueDateTextController.text =
-                            DateFormat('EEE, d MMMM, yyyy').format(pickedDate);
-                      } else {
-                        dueDateTextController.text =
-                            DateFormat('EEE, d MMMM, yyyy')
-                                .format(DateTime.now());
-                      }
-                    },
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Theme.of(context).colorScheme.surfaceBright,
-                      labelText: 'Date',
-                      labelStyle: GoogleFonts.jost(
-                        color:  Theme.of(context).colorScheme.scrim
-                      ),
-                      suffixIcon: Icon(
-                        Icons.date_range,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.scrim)
-                      ),
-
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.surfaceBright),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomInputField(
-                    controller: titleTextController,
-                    labelText: 'Title',),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomInputField(
-                    minLines: 1,
-                    maxLines: 15,
-                    controller: descriptionTextController,
-                    labelText: 'Detail',),
-                const SizedBox(
-                  height: 10,
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 65,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15))),
-                        backgroundColor:
-                             WidgetStatePropertyAll(Theme.of(context).primaryColor)),
-                    onPressed: () {
-                      submitData();
-                    },
-                    child: Text(
-                      'Add',
-                      style: GoogleFonts.jost(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ));
   }
 }
