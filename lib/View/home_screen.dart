@@ -68,15 +68,19 @@ class HomeScreen extends StatelessWidget {
                     height: 25,
                     width: 25,
                     child: Obx(() {
-                      return MyCircularProgressBar(
-                        totalTasks: _taskController.taskList.length.toDouble(),
-                        completedTasks: _taskController.ct.toDouble(),
-                      );
+                      if(_taskController.taskList.length!=0){
+                        return MyCircularProgressBar(
+                          totalTasks: _taskController.taskList.length.toDouble(),
+                          completedTasks: _taskController.ct.toDouble(),
+                        );
+                      }else{
+                        return CircularProgressIndicator(
+                          value: 0,
+                          backgroundColor: Colors.grey[300],
+                          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                        );
+                      }
                     })),
-                // leading: SvgPicture.asset(
-                //   'assets/svg/logo.svg',
-                //   colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onPrimary, BlendMode.srcIn),
-                // ),
                 title: Obx(() {
                   return Text(
                     '${_taskController.completedTask == 0 ? 0 : _taskController.completedTask} of ${_taskController.taskList.length} task',
