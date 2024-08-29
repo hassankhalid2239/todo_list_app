@@ -46,10 +46,11 @@ The To-Do List App helps users manage their daily tasks efficiently. This app is
 4. Filter tasks based on various criteria.
 5. Switch between light and dark modes.
 
-## Video
-- **Screen Recording**: Watch a screen recording demonstrating the app's features
-
-https://github.com/user-attachments/assets/2f38e207-f86b-40be-a721-10e691220eb9
+## Screenshots
+- **Screenshots**: See a screenshots demonstrating the app's features
+<img src="https://github.com/user-attachments/assets/9ec8c8c8-d739-4b75-9dc5-91b0ad882e4d" alt="Home Screen" width="125" height="250">
+<img src="https://github.com/user-attachments/assets/8c86b839-5219-4f50-ac79-522a887b8172" alt="Add Task Screen" width="125" height="250">
+<img src="https://github.com/user-attachments/assets/6c3b996a-039e-4b27-ac8b-d9b8b5fbec92" alt="Update Task Screen" width="125" height="250">
 
 
 ## Contributing
